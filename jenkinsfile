@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+    stages {
+        stage ('checkout') {
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-private-key', url: 'git@github.com:adeola2020-git/python-flask-ci-cd-pipeline.git']])
+            } 
+        }
+        stage ('Setup') {
+            steps {
+                sh '''if [ -d ".env" ]; then
+                    echo "**> virtualenv exists"
+                else
+                    echo "**> creating virtualenv"
+                    virtualenv .env
+                fi'''
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage ('Build') {
+            steps {
+                sh '''echo "Building....."
+                if [ -d ".env" ]; then
+                    echo "**> virtualenv exists"
+                else
+                    echo "**> creating virtualenv"
+                    virtualenv .env
+                fi
+                "sudo docker build -t flask-app ."'''
+            }
+        }
+        stage('env_stage') {
+            steps {
+                sh '''if [ -d ".env" ]; then
+                    echo "**> virtualenv exists"
+                else
+                    echo "**> creating virtualenv"
+                    virtualenv .env
+                fi
+                "python3 setup.py"'''
+                }
+        }
+        stage('deploy') {
+            steps {
+                sh '''echo "Deploying..."
+                if [ -d ".env" ]; then
+                    echo "**> virtualenv exists"
+                else
+                    echo "**> creating virtualenv"
+                    virtualenv .env
+                fi
+                "python3 main.py"'''
+            }
+        }
+    }
+}
