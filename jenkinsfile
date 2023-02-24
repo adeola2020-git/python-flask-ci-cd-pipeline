@@ -1,12 +1,4 @@
 pipeline {
-    options {
-        sh '''if [ -d ".env" ]; then
-                    echo "**> virtualenv exists"
-                else
-                    echo "**> creating virtualenv"
-                    virtualenv .env
-                fi'''
-    }
     agent any
     stages {
         stage ('checkout') {
@@ -16,22 +8,43 @@ pipeline {
         }
         stage ('Setup') {
             steps {
-               'pip install -r requirements.txt'
+                sh '''if [ -d ".venv" ]; then
+                        echo "**> virtualenv exists"
+                    else
+                        echo "**> creating virtualenv"
+                        virtualenv .venv
+                    fi
+                    pip install -r requirements.txt'''
             }
         }
         stage ('Build') {
             steps {
-              sh  "sudo docker build -t flask-app ."
+              sh '''sudo docker build -t flask-app .
+                '''
             }
         }
         stage('env_stage') {
             steps {
-               "python3 setup.py"
+               sh '''if [ -d ".venv" ]; then
+                        echo "**> virtualenv exists"
+                    else
+                        echo "**> creating virtualenv"
+                        virtualenv .venv
+                    fi
+                    python3 setup.py
+                    '''
                 }
         }
         stage('deploy') {
             steps {
-               "python3 main.py"
+               sh '''if [ -d ".venv" ]; then
+                        echo "**> virtualenv exists"
+                    else
+                        echo "**> creating virtualenv"
+                        virtualenv .venv
+                    fi
+                    python3 main.py
+                    '''
             }
         }
     }
