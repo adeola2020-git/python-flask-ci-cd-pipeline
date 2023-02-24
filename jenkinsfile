@@ -1,5 +1,5 @@
 pipeline {
-    agent { dockerfile { filename 'Dockerfile' } }
+    agent { docker { image 'python:3.6-slim' } }
     stages {
         stage ('checkout') {
             steps {
@@ -14,7 +14,7 @@ pipeline {
         }
         stage ('Build') {
             steps {
-              sh '''. .venv/bin/activate
+              sh '''
                     sudo docker build -t flask-app .
                 '''
             }
