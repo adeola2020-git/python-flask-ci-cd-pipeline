@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-private-key', url: 'git@github.com:adeola2020-git/python-flask-ci-cd-pipeline.git']])
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-private-key', url: 'https://github.com/adeola2020-git/python-flask-ci-cd-pipeline']])
             } 
         }
         stage ('Setup') {
