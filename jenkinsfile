@@ -8,12 +8,7 @@ pipeline {
         }
         stage ('Setup') {
             steps {
-                sh '''if [ -d ".venv" ]; then
-                        echo "**> virtualenv exists"
-                    else
-                        echo "**> creating virtualenv"
-                        virtualenv .venv
-                    fi
+                sh '''. .venv/bin/activate
                     pip install -r requirements.txt'''
             }
         }
@@ -25,24 +20,14 @@ pipeline {
         }
         stage('env_stage') {
             steps {
-               sh '''if [ -d ".venv" ]; then
-                        echo "**> virtualenv exists"
-                    else
-                        echo "**> creating virtualenv"
-                        virtualenv .venv
-                    fi
+               sh '''. .venv/bin/activate
                     python3 setup.py
                     '''
                 }
         }
         stage('deploy') {
             steps {
-               sh '''if [ -d ".venv" ]; then
-                        echo "**> virtualenv exists"
-                    else
-                        echo "**> creating virtualenv"
-                        virtualenv .venv
-                    fi
+               sh '''. .venv/bin/activate
                     python3 main.py
                     '''
             }
