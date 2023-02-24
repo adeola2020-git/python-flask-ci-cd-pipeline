@@ -1,23 +1,24 @@
 pipeline {
-    agent { dockerfile { filename 'Dockerfile' } }
+    agent none
     stages {
         stage ('checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-private-key', url: 'git@github.com:adeola2020-git/python-flask-ci-cd-pipeline.git']])
             } 
         }
-        stage ('Setup') {
-            steps {
-                sh '''. .venv/bin/activate
-                    pip install -r requirements.txt'''
-            }
-        }
         stage ('Build') {
             steps {
-              sh '''sudo docker build -t flask-app .
+              sh '''. .venv/bin/activate
+                    sudo docker build -t flask-app .
                 '''
             }
         }
+        // stage ('Setup') {
+        //     steps {
+        //         sh '''. .venv/bin/activate
+        //             pip install -r requirements.txt'''
+        //     }
+        // }
         stage('env_stage') {
             steps {
                sh '''. .venv/bin/activate
